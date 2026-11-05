@@ -225,7 +225,7 @@
         .button.outline:hover { background: #285943; color: white; }
         .card .button { width: 100%; }
 
-        /* ---------- Product detail ---------- */
+    
         .breadcrumb { margin: 25px 0; }
         .breadcrumb a { text-decoration: underline; }
 
@@ -310,7 +310,7 @@
 
     <main class="container">
         @if ($product)
-            {{-- ================= PRODUCT DETAIL PAGE ================= --}}
+           
             <div class="breadcrumb">
                 <a href="{{ route('home') }}">Home</a>
                 /
@@ -372,7 +372,7 @@
             </section>
         @else
             @if ($isHome)
-                {{-- ================= HOME PAGE EXTRA SECTIONS ================= --}}
+                
 
                 <section class="banner">
                     <h1>Give clothes <strong>a second life</strong></h1>
@@ -447,7 +447,7 @@
                     </div>
                 </section>
             @else
-                {{-- Category buttons for category and search pages --}}
+             
                 <nav class="categories" aria-label="Clothing categories">
                     <a href="{{ route('home') }}"
                        class="category {{ $selectedCategory === null ? 'active' : '' }}">
@@ -463,7 +463,7 @@
                 </nav>
             @endif
 
-            {{-- ================= PRODUCT LIST (all pages except detail) ================= --}}
+           
             <div class="heading" id="all">
                 <h2>
                     @if (!empty($search))
