@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ $product ? $product['name'] . ' | StyleEra Thrift' : 'StyleEra Thrift' }}</title>
+    <title>{{ $product ? $product->name . ' | StyleEra Thrift' : 'StyleEra Thrift' }}</title>
 
     <style>
         * { box-sizing: border-box; }
@@ -284,6 +284,29 @@
         @media (max-width: 360px) {
             .grid { grid-template-columns: 1fr; }
         }
+
+        .account-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .account-links form {
+            margin: 0;
+        }
+
+        .account-links button {
+            padding: 8px 12px;
+            border: 1px solid #cbd6c6;
+            border-radius: 7px;
+            background: white;
+            color: #285943;
+            font: inherit;
+            cursor: pointer;
+
+        }
     </style>
 </head>
 
@@ -306,74 +329,92 @@
                 <button type="submit">Search</button>
             </form>
         </div>
+
+        <div class="account-links">
+            @auth
+        <span>Hello, {{ auth()->user()->name }}</span>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit">Logout</button>
+        </form>
+            @else
+        <a href="{{ route('login') }}">Login</a>
+        <a href="{{ route('register') }}">Register</a>
+            @endauth
+    </div>
     </header>
 
-    <main class="container">
+   <main class="container">
+
+         @if (session('success'))
+        <p role="status" style="padding: 14px; background: #e4edde; border-radius: 7px;">
+            {{ session('success') }}
+        </p>
+        @endif
+
         @if ($product)
-           
             <div class="breadcrumb">
                 <a href="{{ route('home') }}">Home</a>
                 /
-                <a href="{{ route('category', $product['category']) }}">
-                    {{ $categories[$product['category']] }}
+                <a href="{{ route('category', $product->category) }}">
+                    {{ $categories[$product->category] }}
                 </a>
-                / {{ $product['name'] }}
+                / {{ $product->name }}
             </div>
 
             <section class="detail">
                 <div class="image">
-                    @if (is_file(public_path('images/products/' . $product['image'])))
+                    @if (is_file(public_path($product->main_image_path)))
                         <img
-                            src="{{ asset('images/products/' . $product['image']) }}"
-                            alt="{{ $product['name'] }}"
+                            src="{{ asset($product->main_image_path) }}"
+                            alt="{{ $product->name }}"
                         >
                     @else
                         <div class="placeholder">
-                            Add photo:<br>{{ $product['image'] }}
+                            Add photo:<br>{{ $product->main_image_path }}
                         </div>
                     @endif
                 </div>
 
                 <div>
-                    <span class="badge">{{ $product['condition'] }}</span>
+                    <span class="badge">{{ $product->condition }}</span>
 
-                    <h1>{{ $product['name'] }}</h1>
+                    <h1>{{ $product->name }}</h1>
 
                     <p class="price">
-                        ${{ number_format($product['price'], 2) }}
+                        ${{ number_format($product->price, 2) }}
                     </p>
 
                     <dl class="specs">
                         <div>
                             <dt>Category</dt>
-                            <dd>{{ $categories[$product['category']] }}</dd>
+                            <dd>{{ $categories[$product->category] }}</dd>
                         </div>
                         <div>
                             <dt>Size</dt>
-                            <dd>{{ $product['size'] }}</dd>
+                            <dd>{{ $product->size }}</dd>
                         </div>
                         <div>
                             <dt>Color</dt>
-                            <dd>{{ $product['color'] }}</dd>
+                            <dd>{{ $product->color }}</dd>
                         </div>
                         <div>
                             <dt>Condition</dt>
-                            <dd>{{ $product['condition'] }}</dd>
+                            <dd>{{ $product->condition }}</dd>
                         </div>
                     </dl>
 
                     <h2>Description</h2>
-                    <p>{{ $product['description'] }}</p>
+                    <p>{{ $product->description }}</p>
 
-                    <a href="{{ route('category', $product['category']) }}" class="button">
+                    <a href="{{ route('category', $product->category) }}" class="button">
                         Back to category
                     </a>
                 </div>
             </section>
         @else
             @if ($isHome)
-                
-
                 <section class="banner">
                     <h1>Give clothes <strong>a second life</strong></h1>
                     <p>Pre-loved and new pieces from sellers in Cambodia. Trendy styles, friendly prices, good for the planet.</p>
@@ -397,11 +438,11 @@
                     </div>
                     <div class="circles">
                         @foreach ($categories as $key => $label)
-                            @php($first = collect($products)->firstWhere('category', $key))
+                            @php($first = $products->firstWhere('category', $key))
                             <a href="{{ route('category', $key) }}" class="circle-item">
                                 <span class="circle">
-                                    @if ($first && is_file(public_path('images/products/' . $first['image'])))
-                                        <img src="{{ asset('images/products/' . $first['image']) }}" alt="">
+                                    @if ($first && is_file(public_path($first->main_image_path)))
+                                        <img src="{{ asset($first->main_image_path) }}" alt="">
                                     @else
                                         {{ mb_substr($label, 0, 1) }}
                                     @endif
@@ -421,7 +462,7 @@
                         <a href="#all">View all</a>
                     </div>
                     <div class="row-scroll">
-                        @foreach (collect($products)->sortByDesc('id')->take(6) as $item)
+                        @foreach ($products->sortByDesc('id')->take(6) as $item)
                             <div class="row-item">
                                 @include('partials.product_card', ['item' => $item])
                             </div>
@@ -447,7 +488,6 @@
                     </div>
                 </section>
             @else
-             
                 <nav class="categories" aria-label="Clothing categories">
                     <a href="{{ route('home') }}"
                        class="category {{ $selectedCategory === null ? 'active' : '' }}">
@@ -462,9 +502,7 @@
                     @endforeach
                 </nav>
             @endif
-
-           
-            <div class="heading" id="all">
+             <div class="heading" id="all">
                 <h2>
                     @if (!empty($search))
                         Results for "{{ $search }}"
@@ -472,7 +510,7 @@
                         {{ $selectedCategory ? $categories[$selectedCategory] : 'All Clothing' }}
                     @endif
                 </h2>
-                <p>{{ count($products) }} products</p>
+                <p>{{ $products->count() }} products</p>
             </div>
 
             <section class="grid" aria-label="Product listings">
