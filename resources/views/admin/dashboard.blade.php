@@ -63,8 +63,19 @@
             <p>Your admin access is working.</p>
 
             <ul>
-                <li>Product management — coming next</li>
-                <li>Category management — not built yet</li>
+                <li>
+                    <a href="{{ route('admin.products.index') }}">
+                        Manage Products
+                    </a>
+
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.categories.index') }}">
+                        Manage Categories
+                    </a>
+                    - list and add
+                </li>
                 <li>User management — not built yet</li>
                 <li>Order management — not built yet</li>
             </ul>

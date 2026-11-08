@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 $categories = DB::table('categories')
     ->orderBy('id')
@@ -110,4 +112,40 @@ Route::middleware(['auth', 'can:access-admin'])
     ->group(function () {
         Route::view('/dashboard', 'admin.dashboard')
             ->name('dashboard');
+        
+        Route::get('/products',[AdminProductController::class,'index'])
+            ->name('products.index');
+        
+        Route::get('/products/create',[AdminProductController::class,'create'])
+            ->name('products.create');
+
+        Route::post('/products',[AdminProductController::class,'store'])
+            ->name('products.store');
+        
+        Route::get('/products/{id}/edit',[AdminProductController::class,'edit'])
+            ->name('products.edit');
+
+        Route::put('/products/{id}',[AdminProductController::class,'update'])
+            ->name('products.update');
+
+        Route::delete('/products/{id}',[AdminProductController::class,'destroy'])
+            ->name('products.destroy');
+
+        Route::get('/categories', [AdminCategoryController::class, 'index'])
+            ->name('categories.index');
+
+        Route::get('/categories/create', [AdminCategoryController::class, 'create'])
+            ->name('categories.create');
+
+        Route::post('/categories', [AdminCategoryController::class, 'store'])
+          ->name('categories.store');
+
+        Route::get('/categories/{id}/edit',[AdminCategoryController::class, 'edit']
+)         ->whereNumber('id')
+          ->name('categories.edit');
+         
+        Route::put('/categories/{id}',[AdminCategoryController::class, 'update']
+)         ->whereNumber('id')
+          ->name('categories.update');
+
     });
