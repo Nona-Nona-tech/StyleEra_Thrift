@@ -307,6 +307,92 @@
             cursor: pointer;
 
         }
+
+        .product-questions {
+           margin-top: 32px;
+           padding: 24px;
+           background: white;
+           border: 1px solid #dce3da;
+           border-radius: 12px;
+        }
+
+        .question-form {
+           margin-bottom: 28px;
+        }
+
+        .question-form label {
+           display: block;
+           font-weight: 700;
+        }
+
+        .question-form textarea {
+           display: block;
+           width: 100%;
+           margin: 12px 0;
+           padding: 12px;
+           border: 1px solid #9aa793;
+           border-radius: 7px;
+           font: inherit;
+           resize: vertical;
+        }
+
+        .question-form button {
+           border: 0;
+           font: inherit;
+           cursor: pointer;
+        }
+
+        .question-help,
+        .question-meta {
+           color: #596653;
+           font-size: 14px;
+        }
+
+        .question-success {
+           padding: 12px;
+           background: #e4edde;
+           color: #285943;
+           border-radius: 7px;
+        }
+
+        .question-error {
+           color: #b91c1c;
+        }
+
+       .question-item {
+           padding: 20px 0;
+           border-top: 1px solid #dce3da;
+      }
+
+      .question-text {
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+     }
+
+    .shop-answer {
+        margin-top: 12px;
+        padding: 14px;
+        background: #f6f7f3;
+        border-left: 3px solid #285943;
+    }
+
+    .answer-label {
+        margin-top: 0;
+        font-weight: 700;
+    }
+
+    .question-pagination {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .question-pagination a,
+    .product-questions > p a {
+       text-decoration: underline;
+     }
     </style>
 </head>
 
@@ -413,6 +499,146 @@
                     </a>
                 </div>
             </section>
+
+            <section class="product-questions" id="questions">
+                <h2>Questions &amp; Answers</h2>
+                
+                @if (session('status') || session('success'))
+        <p class="question-success" role="status">
+            {{ session('status')?? session('success') }}
+        </p>
+    @endif
+
+     @auth
+        @if (auth()->user()->role === 'customer')
+            <form
+                action="{{ route('products.questions.store', [
+                    'product' => $product->id
+                ]) }}"
+                method="POST"
+                class="question-form"
+            >
+                @csrf
+                 <label for="question">Ask about this product</label>
+
+                <p class="question-help" id="question-help">
+                    Your question will be public. Do not include your
+                    email address, phone number, or delivery address.
+                </p>
+
+                 <textarea
+                    id="question"
+                    name="question"
+                    rows="4"
+                    maxlength="1000"
+                    aria-describedby="question-help"
+                    required
+                >{{ old('question') }}</textarea>
+
+                @error('question')
+                    <p class="question-error">{{ $message }}</p>
+                @enderror
+
+                <button type="submit" class="button">
+                    Submit Question
+                </button>
+            </form>
+        @else
+
+            <p>
+                You are signed in as an administrator.
+                <a href="{{ route('admin.questions.index') }}">
+                    manage all customer questions in the dashboard.
+                </a>
+            </p>
+        @endif
+    @else
+        <p>
+            <a href="{{ route('login') }}">Log in</a>
+            to ask a question about this product.
+        </p>
+
+        @endauth
+
+    <div class="question-list">
+        @forelse ($questions as $question)
+            <article class="question-item">
+                <p class="question-meta">
+                    {{ $question->customer_name }}
+                    ·
+                    {{ \Illuminate\Support\Carbon::parse(
+                        $question->created_at
+                    )->format('d M Y') }}
+                </p>
+
+                <p class="question-text">{{ $question->question }}</p>
+
+                @if ($question->answer !== null)
+                    <div class="shop-answer">
+                        <p class="answer-label">
+                            Reply from StyleEra Thrift
+                        </p>
+
+                        <p class="question-text">{{ $question->answer }}</p>
+                    </div>
+                @else
+                    <p class="question-help">Waiting for a reply.</p>
+                @endif
+
+                @can('access-admin')
+                    <form action="{{ route('admin.questions.update', ['id' => $question->id]) }}"method="POST" class="question-form admin-answer-form">
+    
+
+                @csrf
+                @method('PUt')
+                <label for="answer-{{ $question->id }}">{{ $question->answer === null? 'Write a public shop reply': 
+                'Edit your public shop reply' }}
+            </label>
+            
+            <textarea id="answer-{{ $question->id }}" name="answer" row="4" maxlength="2000"
+                required> {{ (string) old('question_id')===(string) $question->id? old('answer',$question->answer):$question->answer }}</textarea>
+
+            <input type="hidden" name="question_id" value="{{ $question->id }}"
+        >
+
+        @if ((string) old('question_id') === (string) $question->id)
+            @error('answer')
+                <p class="question-error">{{ $message }}</p>
+            @enderror
+        @endif
+
+        <button type="submit" class="button"> {{ $question->answer === null? 'Save Answer': 'Update Answer' }}</button>
+    </form>
+@endcan
+        </article>
+
+        @empty
+            <p>No questions yet.</p>
+        @endforelse
+    </div>
+
+    @if ($questions->hasPages())
+        <nav class="question-pagination" aria-label="Questions pagination">
+            @if ($questions->previousPageUrl())
+                <a href="{{ $questions->previousPageUrl() }}#questions">
+                    Previous
+                </a>
+            @endif
+
+            <span>
+                Page {{ $questions->currentPage() }}
+                of {{ $questions->lastPage() }}
+            </span>
+
+            @if ($questions->nextPageUrl())
+                <a href="{{ $questions->nextPageUrl() }}#questions">
+                    Next
+                </a>
+            @endif
+        </nav>
+    @endif
+    </section>
+                
         @else
             @if ($isHome)
                 <section class="banner">

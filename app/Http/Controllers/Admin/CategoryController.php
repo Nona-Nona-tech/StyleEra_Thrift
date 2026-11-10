@@ -89,7 +89,7 @@ class CategoryController extends Controller
     ]);
 }
 
-public function update(Request $request, string $id)
+    public function update(Request $request, string $id)
 {
     $category = DB::table('categories')->find($id);
 
@@ -119,5 +119,32 @@ public function update(Request $request, string $id)
     return redirect()
         ->route('admin.categories.index')
         ->with('success', 'Category updated successfully.');
+}
+    public function destroy(string $id)
+{
+    $category = DB::table('categories')->find($id);
+
+    abort_if($category === null, 404);
+
+    $hasProducts = DB::table('products')
+        ->where('category_id', $category->id)
+        ->exists();
+
+    if ($hasProducts) {
+        return redirect()
+            ->route('admin.categories.index')
+            ->with(
+                'error',
+                'This category contains products. Move them to another category before deleting it.'
+            );
+    }
+
+    DB::table('categories')
+        ->where('id', $category->id)
+        ->delete();
+
+    return redirect()
+        ->route('admin.categories.index')
+        ->with('success', 'Category deleted successfully.');
 }
 }

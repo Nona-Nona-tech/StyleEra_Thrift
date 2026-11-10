@@ -137,25 +137,91 @@
         .disabled {
             color: #777;
         }
-        .delete-form {
-            display: inline-block;
-            margin-top: 8px;
+
+        /* ---------- Action buttons ---------- */
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
         }
 
-        .delete-form button {
-             padding: 8px 14px;
-             border: 0;
-             border-radius: 6px;
-             background: #b3402f;
-             color: white;
-             font: inherit;
-             cursor: pointer;
+        .actions form {
+            margin: 0;
         }
 
-        .delete-form button:hover {
-            background: #8f3224;
+        .act {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 36px;
+            padding: 0 14px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 14px;
+            line-height: 1;
+            white-space: nowrap;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
 
+        .act svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .act:focus-visible {
+            outline: 3px solid #bb792b;
+            outline-offset: 2px;
+        }
+
+        /* View Details: solid green */
+        .act-view {
+            background: #285943;
+            color: #fff;
+        }
+
+        .act-view:hover {
+            background: #193d2d;
+        }
+
+        /* Edit: green outline */
+        .act-edit {
+            background: #fff;
+            color: #285943;
+            border-color: #285943;
+        }
+
+        .act-edit:hover {
+            background: #e4edde;
+        }
+
+        /* Delete: soft red, solid red on hover */
+        .act-delete {
+            background: #fef3f2;
+            color: #b42318;
+            border-color: #fecdca;
+        }
+
+        .act-delete:hover {
+            background: #b42318;
+            color: #fff;
+            border-color: #b42318;
+        }
+
+        /* Small screens: show icons only */
+        @media (max-width: 700px) {
+            .act span {
+                display: none;
+            }
+
+            .act {
+                padding: 0 11px;
+            }
+        }
     </style>
 </head>
 
@@ -174,14 +240,14 @@
         <p>
            <a href="{{ route('admin.products.create') }}" class="button">Add Product</a>
         </p>
-        
+
         @if(session('success'))
-        <p 
+        <p
             role="status"
             style="padding:14px; background:#e4edde; border-radius:8px;">
             {{ session('success') }}
-                   </p>
-        @endif 
+        </p>
+        @endif
         <p>View your shop's products below.Editting and deletion will be added later</p>
 
         <div class="table-wrapper">
@@ -238,27 +304,43 @@
                             </td>
 
                             <td>
-                                <a
-                                    href="{{ route('product.show', ['id' => $product->id]) }}"
-                                    class="button"
-                                >
-                                    View Details
-                                </a>
+                                <div class="actions">
 
-                                <a href="{{ route('admin.products.edit',$product->id) }}">Edit</a>
+                                    <a href="{{ route('product.show', ['id' => $product->id]) }}"
+                                       class="act act-view" aria-label="View details of {{ $product->name }}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <span>View Details</span>
+                                    </a>
 
-                                 <form
-                                    action="{{ route('admin.products.destroy', $product->id) }}"
-                                    method="POST"
-                                    class="delete-form"
-                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                
-                                                                                                                
-                                @csrf
-                                @method('DELETE')
+                                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                                       class="act act-edit" aria-label="Edit {{ $product->name }}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M12 20h9"/>
+                                            <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                                        </svg>
+                                        <span>Edit</span>
+                                    </a>
 
-                                <button type="submit">Delete</button>
-                            </form>
+                                    <form action="{{ route('admin.products.destroy', $product->id) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="act act-delete" aria-label="Delete {{ $product->name }}">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M3 6h18"/>
+                                                <path d="M8 6V4h8v2"/>
+                                                <path d="M6 6l1 14h10l1-14"/>
+                                            </svg>
+                                            <span>Delete</span>
+                                        </button>
+                                    </form>
+
+                                </div>
                             </td>
                         </tr>
                     @empty

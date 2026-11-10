@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductQuestionController;
+use App\Http\Controllers\Admin\ProductQuestionController as AdminProductQuestionController;
 
 $categories = DB::table('categories')
     ->orderBy('id')
@@ -61,11 +65,12 @@ Route::get('/category/{category}', function (string $category) use ($categories,
         ->get();
 
     return view('styleera_thrift', [
-        'categories' => $categories,
-        'products' => $products,
-        'selectedCategory' => $category,
-        'product' => null,
-        'search' => '',
+    'categories' => $categories,
+    'products' => $products,
+    'selectedCategory' => $category,
+    'product' => null,
+    'search' => '',
+    
     ]);
 })->name('category');
 
@@ -76,12 +81,28 @@ Route::get('/products/{id}', function (string $id) use ($categories, $productQue
 
     abort_if($product === null, 404);
 
+    $questions = DB::table('product_questions')
+        ->join(
+            'users',
+            'product_questions.customer_id',
+            '=',
+            'users.id'
+        )
+        ->where('product_questions.product_id', $product->id)
+        ->select(
+            'product_questions.*',
+            'users.name as customer_name'
+        )
+        ->orderByDesc('product_questions.id')
+        ->paginate(10);
+
     return view('styleera_thrift', [
         'categories' => $categories,
         'products' => collect(),
         'selectedCategory' => $product->category,
         'product' => $product,
         'search' => '',
+        'questions' => $questions,
     ]);
 })->whereNumber('id')->name('product.show');
 
@@ -147,5 +168,36 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::put('/categories/{id}',[AdminCategoryController::class, 'update']
 )         ->whereNumber('id')
           ->name('categories.update');
+        
+        Route::delete('/categories/{id}',[AdminCategoryController::class, 'destroy']
+)         ->whereNumber('id')
+          ->name('categories.destroy');
+
+        Route::get('/users', [AdminUserController::class, 'index'])
+          ->name('users.index');
+
+        Route::get('/questions', [AdminProductQuestionController::class, 'index'])
+          ->name('questions.index');
+
+        Route::put('/questions/{id}', [AdminProductQuestionController::class, 'update'])
+          ->whereNumber('id')
+          ->name('questions.update');
+        
+       
 
     });
+
+Route::middleware('auth')->group(function () {
+       Route::get('/profile', [ProfileController::class, 'edit'])
+         ->name('profile.edit');
+
+       Route::put('/profile', [ProfileController::class, 'update'])
+         ->name('profile.update');
+
+       Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+         ->name('profile.password.update');
+
+       Route::middleware('auth')->post('/products/{product}/questions',[ProductQuestionController::class, 'store']
+)        ->name('products.questions.store');
+        
+});

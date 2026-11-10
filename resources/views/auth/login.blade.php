@@ -7,123 +7,256 @@
     <title>Login | StyleEra Thrift</title>
 
     <style>
-        * {
-            box-sizing: border-box;
+        * { box-sizing: border-box; }
+
+        :root {
+            --page: #dffbd6;
+            --pattern: #7fdc93;
+            --card: #ccf7c4;
+            --field: #f1fff0;
+            --dark: #1e6a14;
+            --brand: #14420d;
+            --text: #2f7a25;
+            --icon: #7fb77a;
+            --danger: #a32620;
         }
 
         body {
             margin: 0;
-            padding: 24px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            background: var(--page);
             font-family: Arial, sans-serif;
-            background: #f6f7f3;
-            color: #24352b;
-            line-height: 1.6;
+            color: var(--dark);
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 520px;
-            margin: 30px auto;
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 3px solid var(--dark);
+            outline-offset: 2px;
         }
 
-        a {
-            color: #285943;
+        .page { width: min(420px, 100%); }
+
+        .back {
+            display: inline-block;
+            margin: 0 0 12px 6px;
+            font-size: 14px;
+            color: var(--brand);
+            text-decoration: none;
         }
 
-        form {
-            margin-top: 20px;
-            padding: 24px;
-            background: white;
-            border: 1px solid #dfe5da;
-            border-radius: 12px;
+        .back:hover { text-decoration: underline; }
+
+        /* Green leafy background */
+        .screen {
+            padding: 36px 20px 22px;
+            border-radius: 36px;
+            background-color: var(--pattern);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none' stroke='white' stroke-opacity='0.45' stroke-width='1.5'%3E%3Cpath d='M14 58C14 30 42 18 64 18C64 46 44 72 14 58Z'/%3E%3Cpath d='M14 58L54 26'/%3E%3Ccircle cx='92' cy='34' r='12'/%3E%3Cpath d='M92 22C92 16 96 12 100 12'/%3E%3Cpath d='M70 96C70 78 88 70 104 72C104 90 90 106 70 96Z'/%3E%3Cpath d='M70 96L96 76'/%3E%3Ccircle cx='28' cy='100' r='7'/%3E%3C/svg%3E");
+            box-shadow: 0 12px 30px rgba(30, 106, 20, 0.18);
         }
 
-        .field {
-            margin-bottom: 18px;
+        .card {
+            padding: 32px 24px 24px;
+            border-radius: 26px;
+            background: var(--card);
+            box-shadow: 0 10px 24px rgba(30, 106, 20, 0.2);
         }
+
+        h1 { margin: 0; text-align: center; font-size: 28px; }
+        .sub { margin: 4px 0 10px; text-align: center; color: var(--text); }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        input {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #cbd6c6;
-            border-radius: 6px;
-            font: inherit;
-        }
-
-        .error {
-            margin: 6px 0 0;
-            color: #a32620;
+            margin: 16px 0 6px 6px;
             font-size: 14px;
+            color: var(--text);
         }
 
-        button {
+        .input { position: relative; }
+
+        .input input {
             width: 100%;
-            padding: 12px;
-            background: #285943;
-            color: white;
+            padding: 14px 46px;
             border: 0;
-            border-radius: 7px;
+            border-radius: 14px;
+            background: var(--field);
             font: inherit;
+            font-size: 15px;
+            color: var(--dark);
+        }
+
+        .input input::placeholder { color: #9ccb97; }
+        .input input.invalid { box-shadow: 0 0 0 2px var(--danger); }
+
+        .icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            transform: translateY(-50%);
+            color: var(--icon);
+            pointer-events: none;
+        }
+
+        .eye {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            padding: 6px;
+            border: 0;
+            background: none;
+            color: var(--icon);
             cursor: pointer;
+        }
+
+        .eye svg { width: 20px; height: 20px; }
+        .eye .off { display: none; }
+        .eye.on .off { display: block; }
+        .eye.on .open { display: none; }
+
+        .error { margin: 6px 0 0 6px; font-size: 13px; color: var(--danger); }
+
+        .check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 14px 0 0;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .check input { width: 16px; height: 16px; accent-color: var(--dark); }
+
+        .btn {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--dark);
+            color: white;
+            font: inherit;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover { background: var(--brand); }
+
+        .switch { margin: 18px 0 0; text-align: center; font-size: 13px; color: var(--text); }
+        .switch a { color: var(--dark); font-weight: 700; }
+
+        .brand {
+            margin: 22px 0 0;
+            text-align: center;
+            font-family: Georgia, serif;
+            font-size: 26px;
+            font-style: italic;
+            font-weight: 700;
+            color: var(--brand);
         }
     </style>
 </head>
 
 <body>
-    <main class="container">
-        <a href="{{ route('home') }}">Back to Home</a>
+    <div class="page">
+        <a class="back" href="{{ route('home') }}">&larr; Back to Home</a>
 
-        <h1>Login</h1>
-        <p>Use the email and password you registered with.</p>
+        <div class="screen">
+            <div class="card">
+                <h1>Log in</h1>
+                <p class="sub">Give clothes a second life.</p>
 
-        <form action="{{ route('login.store') }}" method="POST">
-            @csrf
+                <form action="{{ route('login.store') }}" method="POST">
+                    @csrf
 
-            <div class="field">
-                <label for="email">Email address</label>
+                    <label for="email">Email</label>
+                    <div class="input">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="14" rx="2"/>
+                            <path d="M3 7l9 6 9-6"/>
+                        </svg>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            placeholder="example@gmail.com"
+                            autocomplete="email"
+                            class="{{ $errors->has('email') ? 'invalid' : '' }}"
+                            required
+                        >
+                    </div>
+                    @error('email')
+                        <p class="error" role="alert">{{ $message }}</p>
+                    @enderror
 
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    autocomplete="email"
-                    required
-                >
+                    <label for="password">Password</label>
+                    <div class="input">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="5" y="11" width="14" height="10" rx="2"/>
+                            <path d="M8 11V8a4 4 0 018 0v3"/>
+                        </svg>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            placeholder="••••••••••"
+                            autocomplete="current-password"
+                            class="{{ $errors->has('password') ? 'invalid' : '' }}"
+                            required
+                        >
+                        <button type="button" class="eye" id="togglePassword" aria-label="Show password">
+                            <svg class="open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M3 3l18 18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    @error('password')
+                        <p class="error" role="alert">{{ $message }}</p>
+                    @enderror
 
-                @error('email')
-                    <p class="error" role="alert">{{ $message }}</p>
-                @enderror
+                    <label class="check">
+                        <input type="checkbox" name="remember" value="1"> Remember me
+                    </label>
+
+                    <button type="submit" class="btn">Log in</button>
+                </form>
+
+                <p class="switch">
+                    Don't have an account?
+                    <a href="{{ route('register') }}">Register</a> here!
+                </p>
             </div>
 
-            <div class="field">
-                <label for="password">Password</label>
+            <p class="brand">StyleEra Thrift</p>
+        </div>
+    </div>
 
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    autocomplete="current-password"
-                    required
-                >
+    <script>
+        // Show / hide password
+        var btn = document.getElementById('togglePassword');
+        var input = document.getElementById('password');
 
-                @error('password')
-                    <p class="error" role="alert">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <button type="submit">Login</button>
-        </form>
-
-        <p>
-            Don't have an account?
-            <a href="{{ route('register') }}">Register</a>
-        </p>
-    </main>
+        btn.addEventListener('click', function () {
+            var show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            btn.classList.toggle('on', show);
+            btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        });
+    </script>
 </body>
 </html>
