@@ -30,32 +30,8 @@
             background: white;
             border-bottom: 1px solid #dce3da;
         }
-
-        .header-content {
-            min-height: 76px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
         .logo { font-size: 24px; font-weight: 700; color: #285943; white-space: nowrap; }
 
-        .main-nav {
-            display: flex;
-            gap: 20px;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .main-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
-
-        .search { display: flex; flex: 1; max-width: 360px; }
-        .search input { flex: 1; padding: 9px 14px; border: 1px solid #cbd6c6; border-radius: 24px 0 0 24px; font-size: 15px; }
-        .search button { padding: 9px 18px; border: 0; background: #285943; color: white; border-radius: 0 24px 24px 0; cursor: pointer; }
-
-        
         .banner {
             margin-top: 30px;
             padding: 60px 40px;
@@ -274,38 +250,12 @@
             .grid { gap: 12px; }
             .card-body { padding: 12px; }
             .heading { display: block; }
-            .header-content { flex-wrap: wrap; padding: 10px 0; }
-            .main-nav { order: 2; width: 100%; overflow-x: auto; white-space: nowrap; }
-            .search { order: 3; max-width: none; width: 100%; }
             .features { margin: -24px 10px 0; }
             .values-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 360px) {
             .grid { grid-template-columns: 1fr; }
-        }
-
-        .account-links {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            font-size: 14px;
-        }
-
-        .account-links form {
-            margin: 0;
-        }
-
-        .account-links button {
-            padding: 8px 12px;
-            border: 1px solid #cbd6c6;
-            border-radius: 7px;
-            background: white;
-            color: #285943;
-            font: inherit;
-            cursor: pointer;
-
         }
 
         .product-questions {
@@ -393,41 +343,370 @@
     .product-questions > p a {
        text-decoration: underline;
      }
+
+    .site-header {
+    background: #fff;
+    border-bottom: 1px solid #dce3da;
+    }
+
+    .shop-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 88px;
+    padding: 16px 0;
+    }
+
+    .shop-header-top .logo {
+    flex-shrink: 0;
+    font-size: 25px;
+    letter-spacing: -0.5px;
+    }
+
+    .shop-search {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    max-width: 420px;
+    margin: 0;
+    }
+
+    .shop-search input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 11px 16px;
+    border: 1px solid #cbd6c6;
+    border-right: 0;
+    border-radius: 24px 0 0 24px;
+    background: #f8faf6;
+    color: #24352b;
+    font: inherit;
+    font-size: 14px;
+    }
+
+    .shop-search button {
+    padding: 11px 18px;
+    border: 1px solid #285943;
+    border-radius: 0 24px 24px 0;
+    background: #285943;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    }
+
+    .shop-search button:hover {
+    background: #193d2d;
+    }
+
+    .shop-account {
+    flex-shrink: 0;
+    }
+
+    .account-dropdown{
+        position: relative;
+    }
+
+    .account-trigger {
+       display: flex;
+       align-items: center;
+       gap: 9px;
+       padding: 10px 14px;
+       border: 1px solid #dce3da;
+       border-radius: 24px;
+       background: #fff;
+       color: #285943;
+       font-size: 14px;
+       font-weight: 600;
+       list-style: none;
+       cursor: pointer;
+       white-space: nowrap;
+    }
+    .account-trigger::-webkit-details-marker {
+       display: none;
+    }
+
+    .account-trigger:hover,
+    .account-dropdown[open] .account-trigger {
+       background: #edf2e9;
+       border-color: #9caf9b;
+    }
+
+    .account-chevron {
+       font-size: 13px;
+       transition: transform 0.15s ease;
+    }
+
+    .account-dropdown[open] .account-chevron{
+        transform: rotate(180deg);
+    }
+
+    .account-pannel{
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        z-index: 100;
+        width: 240px;
+        max-width: calc(100vw - 32px);
+        padding: 8px;
+        border: 1px solid #dce3da;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(36, 53, 43, 0.14);
+    }
+
+    .account-pannel-heading{
+        padding: 10px 12px 14pz;
+        margin-bottom: 6px;
+        border-bottom: 1px solid #edf0e9;
+    }
+
+    .account-pannel-heading span{
+        display: block;
+        color:#687565;
+        font-size: 12px;
+    }
+
+    .account-pannel-heading strong{
+        display: block;
+        margin-top: 3px;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+    }
+
+    .account-panel > a,
+    .account-logout button {
+       display: block;
+       width: 100%;
+       padding: 10px 12px;
+       border: 0;
+       border-radius: 7px;
+       background: transparent;
+       color: #285943;
+       text-align: left;
+       font: inherit;
+       font-size: 14px;
+       cursor: pointer;
+    }
+
+    .account-panel>a:hover,
+    .account-logout button:hover{
+        background: #edf2e9;
+    }
+
+    .account-logout {
+    margin: 6px 0 0;
+    padding-top: 6px;
+    border-top: 1px solid #edf0e9;
+}
+
+.account-logout button {
+    color: #9b3434;
+}
+
+.account-logout button:hover {
+    background: #fff1f0;
+}
+.guest-account-links {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.signin-link {
+    color: #285943;
+}
+.signin-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.register-link {
+    padding: 9px 16px;
+    border: 1px solid #285943;
+    border-radius: 24px;
+    background: #285943;
+    color: #fff;
+}
+.register-link:hover {
+    background: #193d2d;
+}
+
+.shop-category-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 0 0 12px;
+    overflow-x: auto;
+}
+.shop-category-nav a {
+    flex-shrink: 0;
+    padding: 7px 0;
+    border-bottom: 2px solid transparent;
+    color: #52614e;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.shop-category-nav a:hover,
+.shop-category-nav a.active {
+    border-bottom-color: #285943;
+    color: #285943;
+}
+.shop-search input:focus-visible,
+.shop-search button:focus-visible,
+.account-trigger:focus-visible,
+.account-logout button:focus-visible {
+    outline: 3px solid #bb792b;
+    outline-offset: 3px;
+}
+@media (max-width: 900px) {
+    .shop-header-top {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .shop-account {
+        margin-left: auto;
+    }
+
+    .shop-search {
+        order: 3;
+        flex: 0 0 100%;
+        max-width: none;
+    }
+    .shop-category-nav {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .shop-header-top {
+        padding: 14px 0;
+    }
+
+    .shop-header-top .logo {
+        font-size: 21px;
+    }
+     .account-trigger {
+        gap: 6px;
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    .guest-account-links {
+        gap: 10px;
+        font-size: 12px;
+    }
+
+    .register-link {
+        padding: 8px 12px;
+    }
+}
+@media (max-width: 360px) {
+    .shop-header-top .logo {
+        font-size: 18px;
+    }
+
+    .account-trigger svg {
+        display: none;
+    }
+}
+
+
     </style>
 </head>
 
 <body>
     @php($isHome = !$product && $selectedCategory === null && empty($search))
 
-    <header>
-        <div class="container header-content">
+    <header class="site-header">
+        <div class="container">
+            <div class="shop-header-top">
             <a href="{{ route('home') }}" class="logo">StyleEra Thrift</a>
 
-            <nav class="main-nav" aria-label="Main navigation">
-                @foreach ($categories as $key => $label)
-                    <a href="{{ route('category', $key) }}">{{ $label }}</a>
-                @endforeach
-            </nav>
+            <form action="{{ route('home') }}" method="GET" class="shop-search" role="search">
 
-            <form action="{{ route('home') }}" method="GET" class="search">
-                <input type="search" name="q" value="{{ $search ?? '' }}"
-                       placeholder="Search clothing..." aria-label="Search clothing">
-                <button type="submit">Search</button>
-            </form>
-        </div>
-
-        <div class="account-links">
-            @auth
-        <span>Hello, {{ auth()->user()->name }}</span>
-
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit">Logout</button>
+            <input type="search" name="q" value="{{ $search?? '' }}" placeholder="Search clothing..." ari-label="Search clothing">
+            
+            <button type="submit">Search</button>
+            
         </form>
-            @else
-        <a href="{{ route('login') }}">Login</a>
-        <a href="{{ route('register') }}">Register</a>
+
+        <div class="shop-account">
+            @auth
+            <details class="account-dropdown">
+                <summary class="account-trigger">
+                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4" ></circle>
+                    <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+                </svg>
+
+                <span>
+                    @can ('access-admin') 
+                    Admin Account
+                    @else
+                        My Account
+                    @endcan
+                </span>
+
+                <span class="account=chevron" aria-hidden="true"></span>
+                </summary>
+
+                <div class="account-pannel">
+                    <div class="account-pannel-heading">
+                        <span>Signed is as</span>
+                        <strong>{{ auth()->user()->name }}</strong>
+                    </div>
+
+                    @can('access-admin')
+                        <a href="{{ route('admin.dashboard')}}">
+                            Admin Dashboard
+                        </a>
+                        @endcan
+
+                        <a href="{{ route('profile.edit') }}" >
+                            My Profile
+                        </a>
+
+                        <form action="{{ route('logout') }}" method="POST" class="account-logout"> 
+                            @csrf
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            </details>
+        @else
+            <div class="guest-account-links">
+                <a href="{{ route('login') }}" class="signin-link">Sign in</a>
+
+                <a href="{{ route('register') }}" class="register-link">Register</a>
+                </div>
             @endauth
+        </div>
+    </div>
+
+    <nav class="shop-category-nav" aria-label="main navigation">
+        <a href="{{ route('home') }}" class="{{ $isHome ? 'active': '' }}"
+        @if ($isHome) aria-current="page" 
+        @endif>Home</a>
+    
+    @foreach ($categories as $key=> $label )
+        <a href="{{ route('category',$key) }}" class={{ $selectedCategory=== $key ? 'active' : '' }}
+        @if ($selectedCategory===$key)
+         aria-current="page"
+        @endif
+        >
+        {{ $label }}
+        </a>
+    @endforeach
+    </nav>
     </div>
     </header>
 
@@ -544,13 +823,8 @@
                 </button>
             </form>
         @else
-
-            <p>
-                You are signed in as an administrator.
                 <a href="{{ route('admin.questions.index') }}">
-                    manage all customer questions in the dashboard.
                 </a>
-            </p>
         @endif
     @else
         <p>
@@ -610,7 +884,7 @@
         <button type="submit" class="button"> {{ $question->answer === null? 'Save Answer': 'Update Answer' }}</button>
     </form>
 @endcan
-        </article>
+        
 
         @empty
             <p>No questions yet.</p>
